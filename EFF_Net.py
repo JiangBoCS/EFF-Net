@@ -130,36 +130,6 @@ class DHA(nn.Module):#LCSA_Layer
 
         return x * y
         
-        
-#class DF(nn.Module):
-#    '''Frequency-Hierarchy module'''
-#
-#    def __init__(self, channel_num):
-#        super(DF, self).__init__()
-#
-#        self.C0 = nn.Sequential(
-#             nn.Conv2d(channel_num, channel_num//3, groups=channel_num//3, kernel_size=3, stride=1, padding=1),
-#             nn.LeakyReLU(inplace=True),
-#             nn.Conv2d(channel_num//3, channel_num//3, kernel_size=1, stride=1, padding=0))
-#             
-#        self.C1 = nn.Sequential(
-#             nn.Conv2d(channel_num, channel_num//3, groups=channel_num//3, kernel_size=3, stride=1, padding=2, dilation = 2),
-#             nn.LeakyReLU(inplace=True),
-#             nn.Conv2d(channel_num//3, channel_num//3, kernel_size=1, stride=1, padding=0))    
-#
-#        self.C2 = nn.Sequential(
-#             nn.Conv2d(channel_num, channel_num//3, groups=channel_num//3, kernel_size=3, stride=1, padding=3, dilation = 3),
-#             nn.LeakyReLU(inplace=True),
-#             nn.Conv2d(channel_num//3, channel_num//3, kernel_size=1, stride=1, padding=0))
-#
-#        self.R = nn.GELU()
-#
-#    def forward(self, x):
-#        l = self.R(self.C2(x))
-#        m = self.R(self.C1(x) - l)
-#        h = self.R(self.C0(x) - m)
-#        return l, m, h   
-        
 class DF(nn.Module):
     '''Frequency-Hierarchy module'''
 
@@ -186,61 +156,6 @@ class DF(nn.Module):
         h = self.R(self.C0(x) - self.C1(x))
         return l, m, h   
 
-#class CALayer(nn.Module):
-#    def __init__(self, channel, reduction=16):
-#        super(CALayer, self).__init__()
-#        # global average pooling: feature --> point
-#        self.avg_pool = nn.AdaptiveAvgPool2d(1)
-#        # feature channel downscale and upscale --> channel weight
-#        self.conv_du = nn.Sequential(
-#                nn.Conv2d(channel, channel // reduction, 1, padding=0, bias=True),
-#                nn.ReLU(inplace=True),
-#                nn.Conv2d(channel // reduction, channel, 1, padding=0, bias=True),
-#                nn.Sigmoid()
-#        )
-#
-#    def forward(self, x):
-#        y = self.avg_pool(x)
-#        y = self.conv_du(y)
-#        return x * y
-
-#class EFF(nn.Module):
-#    '''Frequency enhancement module'''
-#
-#    def __init__(self, dim=32, out_dim=128):
-#        super().__init__()
-#        self.linear1 = nn.Sequential(nn.Linear(dim, dim),
-#                                     nn.GELU())
-#        self.DF = DF(dim)
-#        self.dwconv = nn.Sequential(
-#            nn.Conv2d(dim, dim, groups=dim, kernel_size=3, stride=1, padding=1),
-#            nn.LeakyReLU(inplace=True))
-#        self.CA = CALayer(dim)
-#        self.linear2 = nn.Sequential(nn.Linear(dim, out_dim))
-#
-#    def forward(self, x, H, W):
-#        # bs x hw x c
-##        short = x
-#        bs, hw, c = x.size()
-#        x = self.linear1(x)
-#        
-#        # spatial restore
-#        x = rearrange(x, ' b (h w) (c) -> b c h w ', h=H, w=W)
-#        sht = x
-#        # bs,hidden_dim,32x32
-#        l, m, h = self.DF(x)
-#        x = torch.cat((l, m, h), dim = 1)
-#        x = self.dwconv(x)
-#        x = self.CA(x) + sht
-#        x = x + sht
-#
-#        # flaten
-#        x = rearrange(x, ' b c h w -> b (h w) c', h=H, w=W)
-#
-#        x = self.linear2(x)
-#
-#        return x
-        
 class EFF(nn.Module):
     '''Frequency enhancement module'''
 
@@ -275,35 +190,6 @@ class EFF(nn.Module):
         x = self.linear2(x)
 
         return x
-
-#class AFEBlock(nn.Module):
-#    def __init__(self, dim=3, out_dim = 6):
-#        super().__init__()
-#
-#        self.LN0 = nn.LayerNorm(dim)
-#        self.L0 = Linear(dim, int(dim // 2))
-#        self.L1 = Linear(int(dim // 2), dim)
-#        self.act = nn.GELU()
-#        self.attn = DHA(dim)
-#
-#        self.norm2 = nn.LayerNorm(dim)
-#        self.EFF = EFF(dim, out_dim)
-#
-#    def forward(self, x, H, W):
-#        B, L, C = x.shape
-#
-#        shortcut = x
-#        
-#        x = self.LN0(x)
-#        x = self.act(self.L0(x))
-#        xx, t = self.attn(shortcut.contiguous().view(B, C, H, W))
-#        x = self.act(self.L1(x)) + xx.contiguous().view(B, H * W, C)
-#        
-#
-#        # EFF
-#        x = shortcut + x
-#        x = self.EFF(self.norm2(x), H, W)
-#        return x, t
         
 class AFEBlock(nn.Module):
     def __init__(self, dim=3, out_dim = 6):
@@ -405,14 +291,11 @@ if __name__ == '__main__':
     from ptflops import get_model_complexity_info
     import time
     
-    x = torch.randn(1,3,128,128)#.cuda()
+    x = torch.randn(1,3,128,128)
     M = EFF_Net(dim=18)
     y = M(x)
     print(y.shape)
-#    t0 = time.time()
-#    y = M(x)
-#    print((time.time()-t0)/8)
-#    print(y.shape)
+
     flops, params = get_model_complexity_info(M, (3, 256, 256), as_strings=True, print_per_layer_stat=False)
     print('Flops:  ' + flops)
     print('Params: ' + params)
