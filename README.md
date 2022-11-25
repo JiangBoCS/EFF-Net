@@ -1,9 +1,9 @@
 # EFF-Net
 ## Abstract
 Recently, Transformer-based image denoising methods have achieved great progress in the image denoising task. However, these methods also lead to two problems: (a) Since noise can destroy texture or details in the image, the resulting tokens with low weight values may have a negative impact on the reconstructed denoised image (*i.e.*, there are artifacts in the reconstructed image, *etc*); (b) Frequencies in different domains are ignored, leading to the missing of textural details in the reconstructed image. To this end, we propose an **E**nhanced **F**requency **F**usion **Net**work (EFF-Net) with dynamic hash attention for image denoising, called EFF-Net. Specifically, to alleviate the impact of problem (a), we present the \textbf{D}ynamic \textbf{H}ash \textbf{A}ttention (DHA) module, which aims to effectively mitigate the negative impact of tokens with low weight values on image denoising performance; Furthermore, we start from the frequency perspective and design the **E**nhanced **F**requency **F**usion (EFF) module with **D**ecomposition **F**requency (DF) as the core component, which aims to achieve the separation and fusion of noisy image content in the frequency domain, and appropriately reconstruct the image content of different frequency components at different locations. The DHA and EFF modules are integrated into plug-and-play **A**daptive **F**requency **E**nhancement (AFE) transformer blocks to selectively recover different frequencies based on long-range pixel dependency. The extensive experiments endorse the effective, and superior performance of our EFF-Net for image denoising. **The code will be released as soon as possible.**
-
+#### The parameter weights of the model can be downloaded [here.](https://pan.baidu.com/s/1qXF19bez4P1F5G_BX0Y8-w)
+#### Extraction code: abs7
 ### Perform Inference
 ```
 sh test.sh
 ```
-#### The parameter weights of the model can be downloaded [here](https://blog.csdn.net/xiewenrui1996/article/details/101052709)
