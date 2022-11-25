@@ -6,3 +6,4 @@ Recently, Transformer-based image denoising methods have achieved great progress
 ```
 sh test.sh
 ```
+#### The parameter weights of the model can be downloaded [here](https://blog.csdn.net/xiewenrui1996/article/details/101052709)
