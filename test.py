@@ -33,6 +33,19 @@ parser.add_argument('--save_images', default=True, help='Save denoised images in
 parser.add_argument('--embed_dim', type=int, default=32, help='number of data loading workers')    
 parser.add_argument('--win_size', type=int, default=4, help='number of data loading workers')
 parser.add_argument('--token_embed', type=str,default='linear', help='linear/conv token embedding')
+parser.add_argument('--token_mlp', type=str,default='fem', help='ffn/leff token mlp')
+# args for vit
+parser.add_argument('--vit_dim', type=int, default=256, help='vit hidden_dim')
+parser.add_argument('--vit_depth', type=int, default=12, help='vit depth')
+parser.add_argument('--vit_nheads', type=int, default=8, help='vit hidden_dim')
+parser.add_argument('--vit_mlp_dim', type=int, default=512, help='vit mlp_dim')
+parser.add_argument('--vit_patch_size', type=int, default=16, help='vit patch_size')
+parser.add_argument('--global_skip', action='store_true', default=False, help='global skip connection')
+parser.add_argument('--local_skip', action='store_true', default=False, help='local skip connection')
+parser.add_argument('--vit_share', action='store_true', default=False, help='share vit module')
+parser.add_argument('--val_ps', type=int, default=128, help='patch size of training sample')
+
+parser.add_argument('--train_ps', type=int, default=128, help='patch size of training sample')
 
 args = parser.parse_args()
 
