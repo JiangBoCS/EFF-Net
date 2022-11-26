@@ -1,4 +1,4 @@
-python3 ./test_pad.py --arch EFF_Net --batch_size 1 --gpu '0' \
+python3 ./test.py --arch EFF_Net --batch_size 1 --gpu '0' \
     --input_dir /Input_G15/ \
     --gt_dir /Gt/ \
     --result_dir /Ours_CBSD68_G15/ \
