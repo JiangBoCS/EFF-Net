@@ -17,8 +17,6 @@ import scipy.io as sio
 from utils.loader import get_test_data
 import utils
 
-from model import UNet,Uformer,Uformer_Cross,Uformer_CatCross
-
 from skimage import img_as_float32, img_as_ubyte
 from skimage.metrics import peak_signal_noise_ratio as psnr_loss
 from skimage.metrics import structural_similarity as ssim_loss
